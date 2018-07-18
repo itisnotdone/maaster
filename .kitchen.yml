@@ -1,0 +1,34 @@
+---
+driver:
+  name: gogetkitchen
+
+provisioner:
+  name: chef_zero
+  # You may wish to disable always updating cookbooks in CI or other testing environments.
+  # For example:
+  #   always_update_cookbooks: <%= !ENV['CI'] %>
+  # always_update_cookbooks: true
+  install_script_url: >
+    http://def-www.default.don/site/chef-bootstrap/install_chef_script_for_lxd.sh
+
+transport:
+  name: sftp
+  ssh_key: <%= Dir.home + '/.ssh/id_rsa' %>
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: lxc01
+    driver:
+      provider: lxd
+      template: ubuntu-16.04-chef
+      options:
+        maas-on-lxc: true
+
+suites:
+  - name: maaster
+    data_bags_path: data_bags
+    verifier:
+      inspec_tests:
+        - test/integration/default

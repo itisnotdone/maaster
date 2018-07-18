@@ -1,0 +1,3 @@
+maas:
+  key: <%= node['maas']['admin_users'][0]['key'] %>
+  url: <%= "http://#{node['fqdn']}/MAAS/api/2.0" %>
