@@ -8,8 +8,7 @@ provisioner:
   # For example:
   #   always_update_cookbooks: <%= !ENV['CI'] %>
   # always_update_cookbooks: true
-  install_script_url: >
-    http://def-www.default.don/site/chef-bootstrap/install_chef_script_for_lxd.sh
+  install_strategy: once
 
 transport:
   name: sftp
@@ -19,12 +18,11 @@ verifier:
   name: inspec
 
 platforms:
-  - name: lxc01
+  - name: lxc
     driver:
       provider: lxd
-      template: ubuntu-16.04-chef
-      options:
-        maas-on-lxc: true
+      alias: ubuntu-16.04-chef
+      maas-on-lxc: true
 
 suites:
   - name: maaster
