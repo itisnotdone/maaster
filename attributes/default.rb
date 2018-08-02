@@ -14,20 +14,14 @@ default['maas']['admin_users'] = [
     "password" => "password1",
     "email" => "admin1@domain.org"
   },
-  {
-    "username" => "admin2",
-    "password" => "password2",
-    "email" => "admin2@domain.org"
-  }
 ]
-## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-## MAKE A TODO LIST TO ADD SSH PUBLIC FOR ADMIN USERS
-## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-## !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 # for whom to prepare rbmaas configuration
-default['maas']['rbmaas']['users'] = ['root', 'ubuntu']
+default['maas']['rbmaas']['users'] = ['root', 'don']
+
+# Configure ipranges depending on network info as follow
+# https://github.com/itisnotdone/easeovs/tree/master/template
+default['maas']['default_domain'] = 'argn.don'
 
 # https://docs.maas.io/2.3/en/api
 default['maas']['config'] = {
@@ -51,7 +45,7 @@ default['maas']['config'] = {
   'enable_third_party_drivers' => '',
   'http_proxy' => '',
   'kernel_opts' => '',
-  'maas_name' => 'default',
+  'maas_name' => default['maas']['default_domain'],
   'max_node_commissioning_results' => '',
   'max_node_installation_results' => '',
   'max_node_testing_results' => '',
@@ -65,21 +59,17 @@ default['maas']['config'] = {
 }
 # 'maas_name' stands for region name
 
-# Configure ipranges depending on network info as follow
-# https://github.com/itisnotdone/easeovs/tree/master/template
-default['maas']['default_domain'] = 'default.don'
-
 default['maas']['ipranges'] = [
   {
     type: 'dynamic',
-    start_ip: '172.31.0.101',
-    end_ip: '172.31.0.254',
+    start_ip: '172.30.2.101',
+    end_ip: '172.30.2.254',
     comment: 'for some purpose'
   },
   {
     type: 'reserved',
-    start_ip: '172.31.0.1',
-    end_ip: '172.31.0.10',
+    start_ip: '172.30.2.1',
+    end_ip: '172.30.2.10',
     comment: 'for some purpose'
   }
 ]
@@ -95,15 +85,16 @@ default['maas']['dhcp_on'] = [
 
 default['maas']['dnsresources'] = [
   {
-    name: 'def-www',
-    domain: 'default.don',
-    ip_addresses: '172.31.0.4'
+    name: 'argn-www',
+    domain: 'argn.don',
+    ip_addresses: '172.30.2.4'
   }
+]
 
 default['maas']['pods'] = [
   {
     type: 'virsh',
-    name: 'don-kvm',
-    power_address: 'qemu+ssh://don@172.31.0.1/system'
+    name: 'dev-kvm',
+    power_address: 'qemu+ssh://don@172.30.2.1/system'
   }
 ]
