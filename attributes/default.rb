@@ -8,20 +8,21 @@ if default['maas']['install-type'] == 'separate'
   # or default['maas']['role'] = 'rack'
 end
 
-default['maas']['admin_users'] = [
-  {
-    "username" => "admin1",
-    "password" => "password1",
-    "email" => "admin1@domain.org"
-  },
-]
-
 # for whom to prepare rbmaas configuration
 default['maas']['rbmaas']['users'] = ['root', 'don']
 
 # Configure ipranges depending on network info as follow
 # https://github.com/itisnotdone/easeovs/tree/master/template
-default['maas']['default_domain'] = 'argn.don'
+default['maas']['default_domain'] = 'default.don'
+default['maas']['naming_prefix'] = 'def'
+
+default['maas']['admin_users'] = [
+  {
+    'username' => 'admin1',
+    'password' => 'password1',
+    'email' => "admin1@#{default['maas']['default_domain']}"
+  },
+]
 
 # https://docs.maas.io/2.3/en/api
 default['maas']['config'] = {
@@ -62,14 +63,14 @@ default['maas']['config'] = {
 default['maas']['ipranges'] = [
   {
     type: 'dynamic',
-    start_ip: '172.30.2.101',
-    end_ip: '172.30.2.254',
+    start_ip: '172.31.0.101',
+    end_ip: '172.31.0.254',
     comment: 'for some purpose'
   },
   {
     type: 'reserved',
-    start_ip: '172.30.2.1',
-    end_ip: '172.30.2.10',
+    start_ip: '172.31.0.1',
+    end_ip: '172.31.0.10',
     comment: 'for some purpose'
   }
 ]
@@ -85,9 +86,9 @@ default['maas']['dhcp_on'] = [
 
 default['maas']['dnsresources'] = [
   {
-    name: 'argn-www',
-    domain: 'argn.don',
-    ip_addresses: '172.30.2.4'
+  name: "#{default['maas']['naming_prefix']}-www",
+    domain: default['maas']['default_domain'],
+    ip_addresses: '172.31.0.4'
   }
 ]
 
@@ -95,6 +96,6 @@ default['maas']['pods'] = [
   {
     type: 'virsh',
     name: 'dev-kvm',
-    power_address: 'qemu+ssh://don@172.30.2.1/system'
+    power_address: 'qemu+ssh://don@172.31.0.1/system'
   }
 ]
